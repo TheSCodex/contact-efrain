@@ -5,12 +5,16 @@ import {
   getContactById,
   deleteContact,
 } from "../controllers/contact";
+import { apiKeyAuth } from "../middleware/apiKeyAuth";
 
-const router = Router();
+const contactRouter = Router();
 
-router.post("/contact", createContact);
-router.get("/contact", getAllContacts);
-router.get("/contact/:id", getContactById);
-router.delete("/contact/:id", deleteContact);
+contactRouter.use(apiKeyAuth);
 
-export default router;
+contactRouter.post("/contact", createContact);
+contactRouter.get("/contact", getAllContacts);
+contactRouter.get("/contact/:id", getContactById);
+contactRouter.delete("/contact/:id", deleteContact);
+contactRouter.put("/contact/:id/status", deleteContact);
+
+export default contactRouter;
