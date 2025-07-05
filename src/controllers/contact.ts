@@ -61,12 +61,16 @@ export const createContact = async (
   req: Request,
   res: Response
 ): Promise<any> => {
-  let { full_name, email, phone_number, message, status } = req.body;
+  let { full_name, email, phone_number, message, status, recaptcha } = req.body;
 
   if (!full_name || !email || !message) {
     return res
       .status(400)
       .json({ error: "One or more required fields are missing." });
+  }
+
+  if (!recaptcha) {
+    return res.status(403).json({ error: "Recaptcha token is required." });
   }
 
   if (!status) {
@@ -87,6 +91,23 @@ export const createContact = async (
   message = validator.escape(message || "");
 
   try {
+    const response = await fetch(
+      "https://www.google.com/recaptcha/api/siteverify",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          secret: process.env.CAPTCHA_SECRET,
+          response: recaptcha,
+        }),
+      }
+    );
+
+    if (response.status != 200) {
+      return res.status(403).json({ error: "captcha authentication failed" });
+    }
     const contact = await Contact.create({
       full_name,
       email,

@@ -4,15 +4,9 @@ import { User } from "./models/User";
 import dotenv from "dotenv";
 dotenv.config();
 
-export const sequelize = new Sequelize({
-  dialect: "mysql",
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  username: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
+export const sequelize = new Sequelize(process.env.RENDER_STRING as string, {
+  dialect: "postgres",
   models: [Contact, User],
-  logging: true,
 });
 
 export const connectDB = async () => {
