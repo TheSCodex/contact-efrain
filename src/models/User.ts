@@ -1,15 +1,21 @@
 import { Table, Column, Model, DataType } from "sequelize-typescript";
 
 @Table({
-  tableName: "contacts",
+  tableName: "users",
   timestamps: true,
 })
-export class Contact extends Model {
+export class User extends Model {
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  declare full_name: string;
+  declare username: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  declare password: string;
 
   @Column({
     type: DataType.STRING,
@@ -18,20 +24,8 @@ export class Contact extends Model {
   declare email: string;
 
   @Column({
-    type: DataType.STRING,
-    allowNull: true,
-  })
-  declare phone_number: string;
-
-  @Column({
-    type: DataType.TEXT,
+    type: DataType.ENUM("admin", "user"),
     allowNull: false,
   })
-  declare message: string;
-
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-  declare status: 1 | 2 | 3;
+  declare role: "admin" | "user";
 }
